@@ -1,10 +1,17 @@
 #!/usr/bin/python3
+
 def safe_print_division(a, b):
+    """
+    divides 2 integers
+    exercise in exception handling
+    a: an int
+    b: an int
+    Return: the result of the division or None
+    """
     try:
-        result = a / b
-        print("Inside result: {:.1f}".format(result))
-    except:
-        result = None
-        print("Inside result: {}".format(result))
+        c = a / b
+    except (ZeroDivisionError, TypeError):
+        c = None
     finally:
-        return result
+        print("Inside result: {}".format(c))
+    return (c)
