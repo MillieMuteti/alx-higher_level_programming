@@ -2,20 +2,24 @@
 """
 Lists all States and corresponding Cities in the database hbtn_0e_101_usa.
 """
-import sys
+import sqlalchemy
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from relationship_state import State
+from relationship_state import Base, State
 from relationship_city import City
+from sys import argv
+
 
 if __name__ == "__main__":
-    engine = create_engine("mysql+mysqldb://{}:{}@localhost/{}"
-                           .format(sys.argv[1], sys.argv[2], sys.argv[3]),
-                           pool_pre_ping=True)
-    Session = sessionmaker(bind=engine)
+    eng = create_engine("mysql+mysqldb://{}:{}@localhost/{}".format(argv[1],
+                                                                    argv[2],
+                                                                    argv[3]))
+    Base.metadata.create_all(eng)
+    Session = sessionmaker(bind=eng)
     session = Session()
-
-    for state in session.query(State).order_by(State.id):
+    rows = session.query(State).all()
+    for state in rows:
         print("{}: {}".format(state.id, state.name))
         for city in state.cities:
             print("    {}: {}".format(city.id, city.name))
+    session.close()
